@@ -1,0 +1,282 @@
+const newsItems = [
+  {
+    slug: "novo-ano-escolar",
+    title: "Novo ano escolar",
+    date: "01 de Setembro de 2026",
+    category: "Vida escolar",
+    image: "https://images.pexels.com/photos/256520/pexels-photo-256520.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    summary: "Informação de exemplo sobre o início de um novo período escolar e os momentos que marcam a vida da comunidade Santa Albertina.",
+    content: `
+      <p>
+        O início de um novo ano escolar representa um momento importante
+        para toda a comunidade Santa Albertina.
+      </p>
+
+      <p>
+        É uma oportunidade para reencontrar colegas, professores e toda a
+        comunidade escolar, iniciar novos desafios e continuar a construir
+        experiências de aprendizagem.
+      </p>
+
+      <p>
+        Esta publicação apresenta o espaço que será utilizado para o
+        conteúdo completo das notícias publicadas pela escola.
+      </p>
+    `
+  },
+  {
+    slug: "aprendizagem-em-destaque",
+    title: "Aprendizagem em destaque",
+    date: "05 de Setembro de 2026",
+    category: "Académico",
+    image: "https://images.pexels.com/photos/4145190/pexels-photo-4145190.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    summary: "Conteúdo de exemplo para representar uma publicação relacionada com aprendizagem, conhecimento e desenvolvimento académico.",
+    content: `
+      <p>
+        A aprendizagem ocupa um lugar central na experiência escolar e
+        envolve conhecimento, participação e desenvolvimento contínuo.
+      </p>
+
+      <p>
+        Nesta área será apresentado o conteúdo completo das publicações
+        académicas da Santa Albertina.
+      </p>
+    `
+  },
+  {
+    slug: "momentos-da-comunidade",
+    title: "Momentos da comunidade",
+    date: "10 de Setembro de 2026",
+    category: "Comunidade",
+    image: "https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    summary: "Publicação de exemplo sobre momentos e experiências que fazem parte da comunidade escolar.",
+    content: `
+      <p>
+        A vida escolar também é formada pelos momentos de convivência,
+        participação e colaboração entre os diferentes membros da
+        comunidade.
+      </p>
+
+      <p>
+        Esta página apresentará futuramente o conteúdo completo de cada
+        publicação da escola.
+      </p>
+    `
+  },
+  {
+    slug: "conhecimento-e-futuro",
+    title: "Conhecimento e futuro",
+    date: "15 de Setembro de 2026",
+    category: "Educação",
+    image: "https://images.pexels.com/photos/11000394/pexels-photo-11000394.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    summary: "Notícia de exemplo sobre educação, conhecimento e preparação para novos desafios.",
+    content: `
+      <p>
+        A educação prepara os alunos para novos conhecimentos, experiências
+        e desafios ao longo da sua formação.
+      </p>
+
+      <p>
+        O conteúdo real desta publicação será posteriormente administrado
+        através do Painel de Comunicação.
+      </p>
+    `
+  }
+];
+
+function getNewsBySlug(slug) {
+  return newsItems.find((news) => news.slug === slug);
+}
+
+function getRelatedNews(currentSlug) {
+  return newsItems
+    .filter((news) => news.slug !== currentSlug)
+    .slice(0, 3);
+}
+
+export function NoticiasDetalhe(slug) {
+  const news = getNewsBySlug(slug);
+
+  if (!news) {
+    return `
+      <section class="news-detail-not-found section">
+        <div class="container">
+          <span class="section__eyebrow">
+            Notícias
+          </span>
+
+          <h1>Notícia não encontrada</h1>
+
+          <p>
+            A notícia que procura não está disponível.
+          </p>
+
+          <a
+            href="/noticias"
+            data-route
+            class="button button--primary"
+          >
+            ← Voltar para Notícias
+          </a>
+        </div>
+      </section>
+    `;
+  }
+
+  const relatedNews = getRelatedNews(news.slug);
+
+  return `
+    <article class="news-detail">
+
+      <section class="news-detail__hero">
+
+        <div class="news-detail__hero-container container">
+
+          <a
+            href="/noticias"
+            data-route
+            class="news-detail__back"
+          >
+            <span aria-hidden="true">←</span>
+            <span>Voltar para Notícias</span>
+          </a>
+
+          <div class="news-detail__meta">
+
+            <span class="news-detail__category">
+              ${news.category}
+            </span>
+
+            <time class="news-detail__date">
+              ${news.date}
+            </time>
+
+          </div>
+
+          <h1 class="news-detail__title">
+            ${news.title}
+          </h1>
+
+          <p class="news-detail__summary">
+            ${news.summary}
+          </p>
+
+        </div>
+
+      </section>
+
+      <section class="news-detail__main section">
+
+        <div class="container">
+
+          <figure class="news-detail__cover">
+
+            <img
+              src="${news.image}"
+              alt="${news.title}"
+            />
+
+          </figure>
+
+          <div class="news-detail__layout">
+
+            <div class="news-detail__content">
+
+              ${news.content}
+
+            </div>
+
+            <aside class="news-detail__aside">
+
+              <span class="news-detail__aside-label">
+                Publicado em
+              </span>
+
+              <time>
+                ${news.date}
+              </time>
+
+              <a
+                href="/noticias"
+                data-route
+                class="news-detail__aside-link"
+              >
+                ← Ver todas as notícias
+              </a>
+
+            </aside>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      ${
+        relatedNews.length
+          ? `
+            <section class="news-detail__related section">
+
+              <div class="container">
+
+                <div class="news-detail__related-heading">
+
+                  <span class="section__eyebrow">
+                    Continue a explorar
+                  </span>
+
+                  <h2>
+                    Outras notícias
+                  </h2>
+
+                </div>
+
+                <div class="news-detail__related-grid">
+
+                  ${relatedNews.map((item) => `
+                    <a
+                      href="/noticias/${item.slug}"
+                      data-route
+                      class="news-detail__related-card"
+                    >
+
+                      <div class="news-detail__related-image">
+
+                        <img
+                          src="${item.image}"
+                          alt="${item.title}"
+                        />
+
+                      </div>
+
+                      <div class="news-detail__related-body">
+
+                        <span>
+                          ${item.category}
+                        </span>
+
+                        <h3>
+                          ${item.title}
+                        </h3>
+
+                        <time>
+                          ${item.date}
+                        </time>
+
+                      </div>
+
+                    </a>
+                  `).join("")}
+
+                </div>
+
+              </div>
+
+            </section>
+          `
+          : ""
+      }
+
+    </article>
+  `;
+}

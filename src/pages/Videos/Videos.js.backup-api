@@ -1,0 +1,357 @@
+const videoItems = [
+  {
+    type: "youtube",
+    source: "https://www.youtube.com/watch?v=VIDEO_ID_1",
+    title: "Vídeo YouTube de exemplo 1",
+    description: "Conteúdo audiovisual publicado no YouTube."
+  },
+  {
+    type: "youtube",
+    source: "https://www.youtube.com/watch?v=VIDEO_ID_2",
+    title: "Vídeo YouTube de exemplo 2",
+    description: "Conteúdo audiovisual publicado no YouTube."
+  },
+  {
+    type: "local",
+    source: "/uploads/videos/video-exemplo-3.mp4",
+    title: "Vídeo local de exemplo 3",
+    description: "Vídeo hospedado no servidor da Santa Albertina."
+  },
+  {
+    type: "local",
+    source: "/uploads/videos/video-exemplo-4.mp4",
+    title: "Vídeo local de exemplo 4",
+    description: "Vídeo hospedado no servidor da Santa Albertina."
+  }
+];
+
+function getYouTubeId(url) {
+  try {
+    const parsedUrl = new URL(url);
+
+    if (parsedUrl.hostname.includes("youtu.be")) {
+      return parsedUrl.pathname.replace("/", "");
+    }
+
+    return parsedUrl.searchParams.get("v") || "";
+  } catch {
+    return "";
+  }
+}
+
+export function Videos() {
+  return `
+    <div class="videos-page">
+
+      <section class="videos-hero">
+        <div class="videos-hero__image">
+          <img
+            src="https://assets.modelslab.ai/guides/thumbnails/video-duration-settings-jvTjfwLu.png"
+            alt="Imagem conceptual relacionada com vídeo e comunicação"
+          />
+
+          <div class="videos-hero__overlay" aria-hidden="true"></div>
+
+          <div class="videos-hero__container container">
+            <div class="videos-hero__content">
+              <span class="videos-hero__eyebrow">Vídeos</span>
+
+              <h1 class="videos-hero__title">
+                Histórias que ganham
+                <span>vida em vídeo.</span>
+              </h1>
+
+              <p class="videos-hero__description">
+                Acompanhe vídeos, momentos e conteúdos audiovisuais
+                partilhados pela comunidade escolar da Santa Albertina.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="videos-list section">
+        <div class="videos-list__container container">
+
+          <div class="videos-list__heading">
+            <span class="section__eyebrow">Publicações</span>
+
+            <h2>Vídeos da Santa Albertina</h2>
+
+            <p>
+              Explore os conteúdos audiovisuais publicados
+              pela equipa de Comunicação da escola.
+            </p>
+          </div>
+
+          <div class="videos-grid">
+
+            ${videoItems.map((video, index) => `
+              <button
+                class="video-item"
+                type="button"
+                onclick="window.openSchoolVideo(${index})"
+                aria-label="Abrir ${video.title}"
+              >
+
+                ${
+                  video.type === "youtube"
+                    ? `
+                      <div class="video-item__youtube-preview">
+                        <img
+                          src="https://img.youtube.com/vi/${getYouTubeId(video.source)}/hqdefault.jpg"
+                          alt=""
+                        />
+                      </div>
+                    `
+                    : `
+                      <video
+                        class="video-item__preview"
+                        src="${video.source}"
+                        preload="metadata"
+                        muted
+                        playsinline
+                      ></video>
+                    `
+                }
+
+                <span
+                  class="video-item__play"
+                  aria-hidden="true"
+                >
+                  ▶
+                </span>
+
+                <span class="video-item__info">
+                  <strong>${video.title}</strong>
+                  <small>
+                    ${video.type === "youtube"
+                      ? "YouTube"
+                      : "Vídeo local"}
+                  </small>
+                </span>
+
+              </button>
+            `).join("")}
+
+          </div>
+        </div>
+      </section>
+
+      <div
+        class="video-lightbox"
+        id="video-lightbox"
+        aria-hidden="true"
+      >
+
+        <button
+          class="video-lightbox__backdrop"
+          type="button"
+          aria-label="Fechar vídeo"
+          onclick="window.closeSchoolVideo()"
+        ></button>
+
+        <button
+          class="video-lightbox__close"
+          type="button"
+          aria-label="Fechar vídeo"
+          onclick="window.closeSchoolVideo()"
+        >
+          ×
+        </button>
+
+        <button
+          class="video-lightbox__previous"
+          type="button"
+          aria-label="Vídeo anterior"
+          onclick="window.previousSchoolVideo()"
+        >
+          ‹
+        </button>
+
+        <div class="video-lightbox__content">
+
+          <div
+            id="video-lightbox-player"
+            class="video-lightbox__player"
+          ></div>
+
+          <div class="video-lightbox__info">
+            <h2 id="video-lightbox-title"></h2>
+
+            <p id="video-lightbox-description"></p>
+
+            <span id="video-lightbox-counter"></span>
+          </div>
+
+        </div>
+
+        <button
+          class="video-lightbox__next"
+          type="button"
+          aria-label="Próximo vídeo"
+          onclick="window.nextSchoolVideo()"
+        >
+          ›
+        </button>
+
+      </div>
+
+    </div>
+  `;
+}
+
+window.schoolVideoCurrentIndex = 0;
+
+window.openSchoolVideo = function(index) {
+
+  const lightbox =
+    document.querySelector("#video-lightbox");
+
+  const player =
+    document.querySelector("#video-lightbox-player");
+
+  const title =
+    document.querySelector("#video-lightbox-title");
+
+  const description =
+    document.querySelector("#video-lightbox-description");
+
+  const counter =
+    document.querySelector("#video-lightbox-counter");
+
+  if (
+    !lightbox ||
+    !player ||
+    !title ||
+    !description ||
+    !counter
+  ) {
+    return;
+  }
+
+  window.schoolVideoCurrentIndex =
+    (Number(index) + videoItems.length) %
+    videoItems.length;
+
+  const current =
+    videoItems[window.schoolVideoCurrentIndex];
+
+  player.innerHTML = "";
+
+  if (current.type === "youtube") {
+
+    const youtubeId =
+      getYouTubeId(current.source);
+
+    player.innerHTML = `
+      <iframe
+        src="https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1"
+        title="${current.title}"
+        allow="autoplay; encrypted-media; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    `;
+
+  } else {
+
+    player.innerHTML = `
+      <video
+        src="${current.source}"
+        controls
+        autoplay
+        playsinline
+      ></video>
+    `;
+  }
+
+  title.textContent = current.title;
+
+  description.textContent =
+    current.description;
+
+  counter.textContent =
+    `${window.schoolVideoCurrentIndex + 1} / ${videoItems.length}`;
+
+  lightbox.classList.add(
+    "video-lightbox--open"
+  );
+
+  lightbox.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+  document.body.classList.add(
+    "video-lightbox-open"
+  );
+};
+
+window.previousSchoolVideo = function() {
+  window.openSchoolVideo(
+    window.schoolVideoCurrentIndex - 1
+  );
+};
+
+window.nextSchoolVideo = function() {
+  window.openSchoolVideo(
+    window.schoolVideoCurrentIndex + 1
+  );
+};
+
+window.closeSchoolVideo = function() {
+
+  const lightbox =
+    document.querySelector("#video-lightbox");
+
+  const player =
+    document.querySelector("#video-lightbox-player");
+
+  if (!lightbox) {
+    return;
+  }
+
+  if (player) {
+    player.innerHTML = "";
+  }
+
+  lightbox.classList.remove(
+    "video-lightbox--open"
+  );
+
+  lightbox.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+  document.body.classList.remove(
+    "video-lightbox-open"
+  );
+};
+
+document.addEventListener("keydown", (event) => {
+
+  const lightbox =
+    document.querySelector("#video-lightbox");
+
+  if (
+    !lightbox ||
+    !lightbox.classList.contains(
+      "video-lightbox--open"
+    )
+  ) {
+    return;
+  }
+
+  if (event.key === "Escape") {
+    window.closeSchoolVideo();
+  }
+
+  if (event.key === "ArrowLeft") {
+    window.previousSchoolVideo();
+  }
+
+  if (event.key === "ArrowRight") {
+    window.nextSchoolVideo();
+  }
+});

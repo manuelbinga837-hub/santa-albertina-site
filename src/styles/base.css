@@ -1,0 +1,132 @@
+body {
+  overflow-x: hidden;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+.public-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#site-main {
+  flex: 1;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-text);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: clamp(
+    var(--font-size-3xl),
+    5vw,
+    var(--font-size-5xl)
+  );
+}
+
+h2 {
+  font-size: clamp(
+    var(--font-size-2xl),
+    4vw,
+    var(--font-size-4xl)
+  );
+}
+
+h3 {
+  font-size: clamp(
+    var(--font-size-xl),
+    3vw,
+    var(--font-size-2xl)
+  );
+}
+
+p {
+  color: var(--color-text-secondary);
+}
+
+.container {
+  width: min(
+    100% - (var(--page-padding-mobile) * 2),
+    var(--container-xl)
+  );
+  margin-inline: auto;
+}
+
+.section {
+  padding-block: var(--space-16);
+}
+
+.section__header {
+  max-width: 760px;
+  margin-bottom: var(--space-10);
+}
+
+.section__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: var(--space-3);
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.section__title {
+  margin-bottom: var(--space-4);
+}
+
+.section__description {
+  max-width: 680px;
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-relaxed);
+}
+
+.page-placeholder {
+  width: min(
+    100% - (var(--page-padding-mobile) * 2),
+    var(--container-lg)
+  );
+  margin-inline: auto;
+  padding-block: var(--space-24);
+}
+
+.page-placeholder h1 {
+  margin-bottom: var(--space-4);
+}
+
+.page-placeholder p {
+  margin-bottom: var(--space-2);
+}
+
+@media (min-width: 768px) {
+  .container {
+    width: min(
+      100% - (var(--page-padding-desktop) * 2),
+      var(--container-xl)
+    );
+  }
+
+  .section {
+    padding-block: var(--space-20);
+  }
+
+  .page-placeholder {
+    width: min(
+      100% - (var(--page-padding-desktop) * 2),
+      var(--container-lg)
+    );
+  }
+}

@@ -1,0 +1,134 @@
+import "./styles/main.css";
+
+import { initRouter, getRoute } from "./router/router.js";
+import { PublicLayout } from "./layouts/PublicLayout.js";
+import { Header } from "./components/Header/Header.js";
+import { Footer } from "./components/Footer/Footer.js";
+import { initHeaderMenu } from "./components/Header/HeaderMenu.js";
+
+import { Home } from "./pages/Home/Home.js";
+import { Sobre } from "./pages/Sobre/Sobre.js";
+import { Academico } from "./pages/Academico/Academico.js";
+import { VidaEscolar } from "./pages/VidaEscolar/VidaEscolar.js";
+import { Noticias } from "./pages/Noticias/Noticias.js";
+import { NoticiasDetalhe } from "./pages/Noticias/NoticiasDetalhe.js";
+import { Videos } from "./pages/Videos/Videos.js";
+import { VideosDetalhe } from "./pages/Videos/VideosDetalhe.js";
+import { Eventos } from "./pages/Eventos/Eventos.js";
+import { EventoDetalhe } from "./pages/Eventos/EventoDetalhe.js";
+import { Galeria, initGallery } from "./pages/Galeria/Galeria.js";
+import { Contactos, setupContactForm } from "./pages/Contactos/Contactos.js";
+import { GaleriaDetalhe } from "./pages/Galeria/GaleriaDetalhe.js";
+
+const app = document.querySelector("#app");
+
+initRouter(async (path, route) => {
+  if (!route) {
+    app.innerHTML = PublicLayout(`
+      <section class="page-placeholder">
+        <h1>Página não encontrada</h1>
+        <p>A página "${path}" não existe.</p>
+      </section>
+    `);
+
+    renderSharedComponents();
+    return;
+  }
+
+  let pageContent = "";
+
+  switch (route.type) {
+    case "Home":
+      pageContent = Home();
+      break;
+
+    case "Sobre":
+      pageContent = Sobre();
+      break;
+
+    case "Academico":
+      pageContent = Academico();
+      break;
+
+    case "VidaEscolar":
+      pageContent = VidaEscolar();
+      break;
+
+    case "Noticias":
+      pageContent = Noticias();
+      break;
+
+    case "NoticiaDetalhe":
+      pageContent = await NoticiasDetalhe(route.params.slug);
+      break;
+
+    case "Videos":
+      pageContent = Videos();
+      break;
+
+    case "VideoDetalhe":
+      pageContent = VideosDetalhe(route.params.slug);
+      break;
+
+    case "Eventos":
+      pageContent = Eventos();
+      break;
+
+    case "EventoDetalhe":
+      pageContent = EventoDetalhe(route.params.slug);
+      break;
+
+    case "Galeria":
+      pageContent = Galeria();
+      break;
+
+    case "GaleriaDetalhe":
+      pageContent = GaleriaDetalhe(route.params.slug);
+      break;
+    case "Contactos":
+      pageContent = Contactos();
+      break;
+
+    case "Comunicacao":
+      window.location.href = "http://localhost:5174";
+      return;
+
+    default:
+      pageContent = `
+        <section class="page-placeholder">
+          <h1>Santa Albertina</h1>
+          <p>Rota: ${route.type}</p>
+          <p>URL: ${path}</p>
+        </section>
+      `;
+  }
+
+  app.innerHTML = PublicLayout(pageContent);
+
+  if (route.type === "Contactos") {
+    setupContactForm();
+  }
+
+  renderSharedComponents();
+});
+
+function renderSharedComponents() {
+  const header = document.querySelector("#site-header");
+  const footer = document.querySelector("#site-footer");
+
+  if (header) {
+    header.innerHTML = Header();
+  }
+
+  if (footer) {
+    footer.innerHTML = Footer();
+  }
+
+  initHeaderMenu();
+
+  if (getRoute()?.type === "Galeria") {
+    setTimeout(() => {
+      initGallery();
+    }, 0);
+  }
+}

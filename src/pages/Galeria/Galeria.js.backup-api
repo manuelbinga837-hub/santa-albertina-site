@@ -1,0 +1,349 @@
+const galleryImages = [
+  {
+    src: "https://images.pexels.com/photos/11000394/pexels-photo-11000394.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    alt: "Fotografia de exemplo da galeria"
+  },
+  {
+    src: "https://images.pexels.com/photos/256520/pexels-photo-256520.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    alt: "Fotografia de exemplo da galeria"
+  },
+  {
+    src: "https://images.pexels.com/photos/4145190/pexels-photo-4145190.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    alt: "Fotografia de exemplo da galeria"
+  },
+  {
+    src: "https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    alt: "Fotografia de exemplo da galeria"
+  }
+];
+
+export function Galeria() {
+  return `
+    <div class="gallery-page">
+
+      <section class="gallery-hero">
+
+        <div class="gallery-hero__image">
+
+          <img
+            src="https://images.pexels.com/photos/11000394/pexels-photo-11000394.jpeg?auto=compress&cs=tinysrgb&w=1600"
+            alt="Imagem conceptual relacionada com galeria e exposição"
+          />
+
+          <div class="gallery-hero__overlay" aria-hidden="true"></div>
+
+          <div class="gallery-hero__container container">
+
+            <div class="gallery-hero__content">
+
+              <span class="gallery-hero__eyebrow">
+                Galeria
+              </span>
+
+              <h1 class="gallery-hero__title">
+                Momentos que ficam
+                <span>guardados na memória.</span>
+              </h1>
+
+              <p class="gallery-hero__description">
+                Explore fotografias e momentos que representam
+                a vida escolar e as experiências vividas pela
+                comunidade da Santa Albertina.
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <section class="gallery-content section">
+
+        <div class="gallery-content__container container">
+
+          <div class="gallery-content__heading">
+
+            <span class="section__eyebrow">
+              Fotografias
+            </span>
+
+            <h2>
+              Momentos da Santa Albertina
+            </h2>
+
+            <p>
+              Veja momentos e experiências da comunidade escolar
+              através das fotografias.
+            </p>
+
+          </div>
+
+          <div class="gallery-grid">
+
+            ${galleryImages.map((image, index) => `
+              <button
+                class="gallery-photo"
+                type="button"
+                data-gallery-index="${index}"
+                aria-label="Abrir fotografia ${index + 1}"
+                onclick="window.openGalleryPhoto(${index})"
+              >
+                <img
+                  src="${image.src}"
+                  alt="${image.alt}"
+                />
+              </button>
+            `).join("")}
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <div
+        class="gallery-lightbox"
+        id="gallery-lightbox"
+        aria-hidden="true"
+      >
+
+        <button
+          class="gallery-lightbox__backdrop"
+          id="gallery-lightbox-backdrop"
+          type="button"
+          aria-label="Fechar fotografia"
+        ></button>
+
+        <button
+          class="gallery-lightbox__close"
+          id="gallery-lightbox-close"
+          type="button"
+          aria-label="Fechar fotografia"
+          onclick="window.closeGalleryPhoto()"
+        >
+          ×
+        </button>
+
+        <button
+          class="gallery-lightbox__previous"
+          id="gallery-lightbox-previous"
+          type="button"
+          aria-label="Fotografia anterior"
+          onclick="window.previousGalleryPhoto()"
+        >
+          ‹
+        </button>
+
+        <div class="gallery-lightbox__content">
+
+          <img
+            id="gallery-lightbox-image"
+            src=""
+            alt=""
+          />
+
+        </div>
+
+        <button
+          class="gallery-lightbox__next"
+          id="gallery-lightbox-next"
+          type="button"
+          aria-label="Próxima fotografia"
+          onclick="window.nextGalleryPhoto()"
+        >
+          ›
+        </button>
+
+        <div
+          class="gallery-lightbox__counter"
+          id="gallery-lightbox-counter"
+          aria-live="polite"
+        ></div>
+
+      </div>
+
+    </div>
+  `;
+}
+
+window.openGalleryPhoto = function(index) {
+  const lightbox = document.querySelector("#gallery-lightbox");
+  const image = document.querySelector("#gallery-lightbox-image");
+  const counter = document.querySelector("#gallery-lightbox-counter");
+
+  if (!lightbox || !image || !counter) {
+    return;
+  }
+
+  const currentIndex =
+    (Number(index) + galleryImages.length) % galleryImages.length;
+
+  const current = galleryImages[currentIndex];
+
+  image.src = current.src;
+  image.alt = current.alt;
+
+  counter.textContent =
+    `${currentIndex + 1} / ${galleryImages.length}`;
+
+  lightbox.classList.add("gallery-lightbox--open");
+  lightbox.setAttribute("aria-hidden", "false");
+
+  document.body.classList.add("gallery-lightbox-open");
+};
+
+window.galleryCurrentIndex = 0;
+
+window.openGalleryPhoto = function(index) {
+  const lightbox = document.querySelector("#gallery-lightbox");
+  const image = document.querySelector("#gallery-lightbox-image");
+  const counter = document.querySelector("#gallery-lightbox-counter");
+
+  if (!lightbox || !image || !counter) {
+    return;
+  }
+
+  window.galleryCurrentIndex =
+    (Number(index) + galleryImages.length) % galleryImages.length;
+
+  const current = galleryImages[window.galleryCurrentIndex];
+
+  image.src = current.src;
+  image.alt = current.alt;
+
+  counter.textContent =
+    `${window.galleryCurrentIndex + 1} / ${galleryImages.length}`;
+
+  lightbox.classList.add("gallery-lightbox--open");
+  lightbox.setAttribute("aria-hidden", "false");
+
+  document.body.classList.add("gallery-lightbox-open");
+};
+
+window.previousGalleryPhoto = function() {
+  window.openGalleryPhoto(
+    window.galleryCurrentIndex - 1
+  );
+};
+
+window.nextGalleryPhoto = function() {
+  window.openGalleryPhoto(
+    window.galleryCurrentIndex + 1
+  );
+};
+
+window.closeGalleryPhoto = function() {
+  const lightbox = document.querySelector("#gallery-lightbox");
+  const image = document.querySelector("#gallery-lightbox-image");
+
+  if (!lightbox) {
+    return;
+  }
+
+  lightbox.classList.remove("gallery-lightbox--open");
+  lightbox.setAttribute("aria-hidden", "true");
+
+  document.body.classList.remove("gallery-lightbox-open");
+
+  if (image) {
+    image.src = "";
+    image.alt = "";
+  }
+};
+
+export function initGallery() {
+  const lightbox = document.querySelector("#gallery-lightbox");
+  const image = document.querySelector("#gallery-lightbox-image");
+  const close = document.querySelector("#gallery-lightbox-close");
+  const previous = document.querySelector("#gallery-lightbox-previous");
+  const next = document.querySelector("#gallery-lightbox-next");
+  const backdrop = document.querySelector("#gallery-lightbox-backdrop");
+  const counter = document.querySelector("#gallery-lightbox-counter");
+
+  if (
+    !lightbox ||
+    !image ||
+    !close ||
+    !previous ||
+    !next ||
+    !backdrop ||
+    !counter
+  ) {
+    return;
+  }
+
+  let currentIndex = 0;
+
+  function showImage(index) {
+    currentIndex =
+      (index + galleryImages.length) % galleryImages.length;
+
+    const current = galleryImages[currentIndex];
+
+    image.src = current.src;
+    image.alt = current.alt;
+
+    counter.textContent =
+      `${currentIndex + 1} / ${galleryImages.length}`;
+  }
+
+  function openLightbox(index) {
+    showImage(index);
+
+    lightbox.classList.add("gallery-lightbox--open");
+    lightbox.setAttribute("aria-hidden", "false");
+    document.body.classList.add("gallery-lightbox-open");
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove("gallery-lightbox--open");
+    lightbox.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("gallery-lightbox-open");
+
+    image.src = "";
+    image.alt = "";
+  }
+
+  function previousImage() {
+    showImage(currentIndex - 1);
+  }
+
+  function nextImage() {
+    showImage(currentIndex + 1);
+  }
+
+  document.querySelectorAll(".gallery-photo").forEach((photo) => {
+    photo.onclick = () => {
+      const index = Number(
+        photo.getAttribute("data-gallery-index")
+      );
+
+      openLightbox(index);
+    };
+  });
+
+  close.onclick = closeLightbox;
+  backdrop.onclick = closeLightbox;
+  previous.onclick = previousImage;
+  next.onclick = nextImage;
+
+  document.onkeydown = (event) => {
+    if (!lightbox.classList.contains("gallery-lightbox--open")) {
+      return;
+    }
+
+    if (event.key === "Escape") {
+      closeLightbox();
+    }
+
+    if (event.key === "ArrowLeft") {
+      previousImage();
+    }
+
+    if (event.key === "ArrowRight") {
+      nextImage();
+    }
+  };
+}

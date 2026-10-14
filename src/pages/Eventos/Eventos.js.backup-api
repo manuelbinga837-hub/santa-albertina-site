@@ -1,0 +1,402 @@
+const eventItems = [
+  {
+    title: "Feira de Ciências",
+    date: "20 de Setembro de 2026",
+    time: "09:00",
+    location: "Santa Albertina",
+    image: "https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    description: "Evento de exemplo dedicado à ciência, à aprendizagem e à apresentação de trabalhos desenvolvidos pelos alunos."
+  },
+  {
+    title: "Encontro da Comunidade Escolar",
+    date: "28 de Setembro de 2026",
+    time: "10:00",
+    location: "Santa Albertina",
+    image: "https://images.pexels.com/photos/3184436/pexels-photo-3184436.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    description: "Momento de exemplo para representar um encontro entre diferentes membros da comunidade escolar."
+  },
+  {
+    title: "Actividade Académica",
+    date: "05 de Outubro de 2026",
+    time: "08:30",
+    location: "Santa Albertina",
+    image: "https://images.pexels.com/photos/5905445/pexels-photo-5905445.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    description: "Actividade de exemplo relacionada com aprendizagem, conhecimento e desenvolvimento académico."
+  },
+  {
+    title: "Dia da Escola",
+    date: "15 de Outubro de 2026",
+    time: "09:30",
+    location: "Santa Albertina",
+    image: "https://images.pexels.com/photos/207692/pexels-photo-207692.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    description: "Evento de exemplo para representar um momento especial de celebração e convivência da comunidade escolar."
+  }
+];
+
+export function Eventos() {
+  return `
+    <div class="events-page">
+
+      <section class="events-hero">
+
+        <div class="events-hero__image">
+
+          <img
+            src="https://images.pexels.com/photos/32529343/pexels-photo-32529343.jpeg?auto=compress&cs=tinysrgb&w=1600"
+            alt="Imagem conceptual relacionada com eventos e actividades escolares"
+          />
+
+          <div
+            class="events-hero__overlay"
+            aria-hidden="true"
+          ></div>
+
+          <div class="events-hero__container container">
+
+            <div class="events-hero__content">
+
+              <span class="events-hero__eyebrow">
+                Eventos
+              </span>
+
+              <h1 class="events-hero__title">
+                Momentos que fazem
+                <span>parte da vida escolar.</span>
+              </h1>
+
+              <p class="events-hero__description">
+                Descubra os eventos, actividades e momentos
+                importantes da comunidade escolar da Santa Albertina.
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <section class="events-list section">
+
+        <div class="events-list__container container">
+
+          <div class="events-list__heading">
+
+            <span class="section__eyebrow">
+              Agenda
+            </span>
+
+            <h2>
+              Eventos da Santa Albertina
+            </h2>
+
+            <p>
+              Explore os eventos e actividades publicados
+              pela comunidade escolar.
+            </p>
+
+          </div>
+
+          <div class="events-grid">
+
+            ${eventItems.map((event, index) => `
+              <button
+                class="event-card"
+                type="button"
+                onclick="window.openSchoolEvent(${index})"
+                aria-label="Abrir evento: ${event.title}"
+              >
+
+                <div class="event-card__image">
+
+                  <img
+                    src="${event.image}"
+                    alt="${event.title}"
+                  />
+
+                </div>
+
+                <div class="event-card__content">
+
+                  <span class="event-card__label">
+                    Evento
+                  </span>
+
+                  <h3>
+                    ${event.title}
+                  </h3>
+
+                  <div class="event-card__meta">
+
+                    <span>
+                      ${event.date}
+                    </span>
+
+                    <span>
+                      ${event.time}
+                    </span>
+
+                    <span>
+                      ${event.location}
+                    </span>
+
+                  </div>
+
+                  <p>
+                    ${event.description}
+                  </p>
+
+                </div>
+
+              </button>
+            `).join("")}
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <div
+        class="event-lightbox"
+        id="event-lightbox"
+        aria-hidden="true"
+      >
+
+        <button
+          class="event-lightbox__backdrop"
+          type="button"
+          aria-label="Fechar evento"
+          onclick="window.closeSchoolEvent()"
+        ></button>
+
+        <button
+          class="event-lightbox__close"
+          type="button"
+          aria-label="Fechar evento"
+          onclick="window.closeSchoolEvent()"
+        >
+          ×
+        </button>
+
+        <button
+          class="event-lightbox__previous"
+          type="button"
+          aria-label="Evento anterior"
+          onclick="window.previousSchoolEvent()"
+        >
+          ‹
+        </button>
+
+        <article class="event-lightbox__content">
+
+          <div class="event-lightbox__image">
+
+            <img
+              id="event-lightbox-image"
+              src=""
+              alt=""
+            />
+
+          </div>
+
+          <div class="event-lightbox__body">
+
+            <span
+              class="event-lightbox__label"
+              id="event-lightbox-label"
+            >
+              Evento
+            </span>
+
+            <h2 id="event-lightbox-title"></h2>
+
+            <div class="event-lightbox__meta">
+
+              <span id="event-lightbox-date"></span>
+
+              <span id="event-lightbox-time"></span>
+
+              <span id="event-lightbox-location"></span>
+
+            </div>
+
+            <p id="event-lightbox-description"></p>
+
+            <span
+              class="event-lightbox__counter"
+              id="event-lightbox-counter"
+            ></span>
+
+          </div>
+
+        </article>
+
+        <button
+          class="event-lightbox__next"
+          type="button"
+          aria-label="Próximo evento"
+          onclick="window.nextSchoolEvent()"
+        >
+          ›
+        </button>
+
+      </div>
+
+    </div>
+  `;
+}
+
+window.schoolEventCurrentIndex = 0;
+
+window.openSchoolEvent = function(index) {
+
+  const lightbox =
+    document.querySelector("#event-lightbox");
+
+  const image =
+    document.querySelector("#event-lightbox-image");
+
+  const title =
+    document.querySelector("#event-lightbox-title");
+
+  const date =
+    document.querySelector("#event-lightbox-date");
+
+  const time =
+    document.querySelector("#event-lightbox-time");
+
+  const location =
+    document.querySelector("#event-lightbox-location");
+
+  const description =
+    document.querySelector("#event-lightbox-description");
+
+  const counter =
+    document.querySelector("#event-lightbox-counter");
+
+  if (
+    !lightbox ||
+    !image ||
+    !title ||
+    !date ||
+    !time ||
+    !location ||
+    !description ||
+    !counter
+  ) {
+    return;
+  }
+
+  window.schoolEventCurrentIndex =
+    (Number(index) + eventItems.length) %
+    eventItems.length;
+
+  const current =
+    eventItems[window.schoolEventCurrentIndex];
+
+  image.src = current.image;
+  image.alt = current.title;
+
+  title.textContent =
+    current.title;
+
+  date.textContent =
+    current.date;
+
+  time.textContent =
+    current.time;
+
+  location.textContent =
+    current.location;
+
+  description.textContent =
+    current.description;
+
+  counter.textContent =
+    `${window.schoolEventCurrentIndex + 1} / ${eventItems.length}`;
+
+  lightbox.classList.add(
+    "event-lightbox--open"
+  );
+
+  lightbox.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+  document.body.classList.add(
+    "event-lightbox-open"
+  );
+};
+
+window.previousSchoolEvent = function() {
+  window.openSchoolEvent(
+    window.schoolEventCurrentIndex - 1
+  );
+};
+
+window.nextSchoolEvent = function() {
+  window.openSchoolEvent(
+    window.schoolEventCurrentIndex + 1
+  );
+};
+
+window.closeSchoolEvent = function() {
+
+  const lightbox =
+    document.querySelector("#event-lightbox");
+
+  const image =
+    document.querySelector("#event-lightbox-image");
+
+  if (!lightbox) {
+    return;
+  }
+
+  lightbox.classList.remove(
+    "event-lightbox--open"
+  );
+
+  lightbox.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+  document.body.classList.remove(
+    "event-lightbox-open"
+  );
+
+  if (image) {
+    image.src = "";
+    image.alt = "";
+  }
+};
+
+document.addEventListener("keydown", (event) => {
+
+  const lightbox =
+    document.querySelector("#event-lightbox");
+
+  if (
+    !lightbox ||
+    !lightbox.classList.contains(
+      "event-lightbox--open"
+    )
+  ) {
+    return;
+  }
+
+  if (event.key === "Escape") {
+    window.closeSchoolEvent();
+  }
+
+  if (event.key === "ArrowLeft") {
+    window.previousSchoolEvent();
+  }
+
+  if (event.key === "ArrowRight") {
+    window.nextSchoolEvent();
+  }
+});
