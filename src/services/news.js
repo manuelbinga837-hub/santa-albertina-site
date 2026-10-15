@@ -1,5 +1,4 @@
-const API_BASE_URL = "http://localhost:3000/api/v1";
-
+const API_BASE_URL = "https://sistema-escolar-santa-albertina-1.onrender.com/api/v1";
 
 export async function getPublicNews() {
   const response = await fetch(`${API_BASE_URL}/public/news`);
