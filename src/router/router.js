@@ -1,3 +1,5 @@
+const BASE_PATH = "/santa-albertina-site";
+
 const routes = {
   "/": "Home",
   "/sobre": "Sobre",
@@ -19,7 +21,17 @@ const dynamicRoutes = [
 ];
 
 export function getCurrentPath() {
-  return window.location.pathname;
+  let path = window.location.pathname;
+
+  if (path === BASE_PATH || path === `${BASE_PATH}/`) {
+    return "/";
+  }
+
+  if (path.startsWith(`${BASE_PATH}/`)) {
+    path = path.slice(BASE_PATH.length);
+  }
+
+  return path || "/";
 }
 
 export function getRoute(path = getCurrentPath()) {
@@ -51,25 +63,19 @@ export function navigateTo(path) {
     return;
   }
 
-  window.history.pushState({}, "", path);
+  const destination = `${BASE_PATH}${path === "/" ? "/" : path}`;
 
-  window.dispatchEvent(
-    new PopStateEvent("popstate")
-  );
+  window.history.pushState({}, "", destination);
+
+  window.dispatchEvent(new PopStateEvent("popstate"));
 }
 
 export function initRouter(onRouteChange) {
   const handleRouteChange = () => {
-    onRouteChange(
-      getCurrentPath(),
-      getRoute()
-    );
+    onRouteChange(getCurrentPath(), getRoute());
   };
 
-  window.addEventListener(
-    "popstate",
-    handleRouteChange
-  );
+  window.addEventListener("popstate", handleRouteChange);
 
   document.addEventListener("click", (event) => {
     const link = event.target.closest("a[data-route]");
