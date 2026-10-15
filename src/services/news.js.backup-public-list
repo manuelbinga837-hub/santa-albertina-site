@@ -1,23 +1,23 @@
-const API_BASE_URL = "http://localhost:3000/api/v1";
+const API_BASE_URL = "https://sistema-escolar-santa-albertina-1.onrender.com/api/v1";
 
 export async function getPublicNewsById(id) {
-  const response = await fetch(
-    `${API_BASE_URL}/public/news/${encodeURIComponent(id)}`
-  );
+const response = await fetch(
+"${API_BASE_URL}/public/news/${encodeURIComponent(id)}"
+);
 
-  let data = null;
+let data = null;
 
-  try {
-    data = await response.json();
-  } catch {
-    data = null;
-  }
+try {
+data = await response.json();
+} catch {
+data = null;
+}
 
-  if (!response.ok || !data?.success) {
-    throw new Error(
-      data?.message || "Não foi possível carregar a notícia."
-    );
-  }
+if (!response.ok || !data?.success) {
+throw new Error(
+data?.message || "Não foi possível carregar a notícia."
+);
+}
 
-  return data.data;
+return data.data;
 }
