@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A carregar — Santa Albertina</title>
+  <script>
+    (function () {
+      var base = "/santa-albertina-site";
+      var path = window.location.pathname;
+      var route = path.startsWith(base)
+        ? path.slice(base.length)
+        : path;
+
+      var redirect = base + "/?/" + route.replace(/^\//, "");
+
+      if (window.location.search) {
+        redirect += "&" + window.location.search.slice(1);
+      }
+
+      if (window.location.hash) {
+        redirect += window.location.hash;
+      }
+
+      window.location.replace(redirect);
+    })();
+  </script>
+</head>
+<body>
+  <p>A carregar o site Santa Albertina...</p>
+</body>
+</html>
