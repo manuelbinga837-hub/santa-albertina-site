@@ -21,7 +21,15 @@ const dynamicRoutes = [
 ];
 
 export function getCurrentPath() {
-  let path = window.location.pathname;
+  const url = new URL(window.location.href);
+  let path = url.pathname;
+
+  // Recupera a rota guardada pelo 404.html: /?=/noticias
+  if (url.search.startsWith("?/")) {
+    path = url.search.slice(1).split("&")[0];
+  } else if (url.search.startsWith("?/")) {
+    path = url.search.slice(1);
+  }
 
   if (path === BASE_PATH || path === `${BASE_PATH}/`) {
     return "/";
@@ -66,7 +74,6 @@ export function navigateTo(path) {
   const destination = `${BASE_PATH}${path === "/" ? "/" : path}`;
 
   window.history.pushState({}, "", destination);
-
   window.dispatchEvent(new PopStateEvent("popstate"));
 }
 
@@ -91,7 +98,6 @@ export function initRouter(onRouteChange) {
     }
 
     event.preventDefault();
-
     navigateTo(href);
   });
 
